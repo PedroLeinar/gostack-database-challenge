@@ -13,8 +13,8 @@ class TransactionsRepository extends Repository<Transaction> {
   public async getBalance(): Promise<Balance> {
     const transactions = await this.find();
 
-    const { income, outcome } = await transactions.reduce(
-      (acc: Balance, transaction: Transaction) => {
+    const { income, outcome } = transactions.reduce(
+      (acc, transaction) => {
         switch (transaction.type) {
           case 'income':
             acc.income += transaction.value;
