@@ -22,7 +22,7 @@ class CreateTransactionService {
     const categoriesRepository = getRepository(Category);
 
     if (!['income', 'outcome'].includes(type)) {
-      throw new AppError('Transaction Type is invalid ');
+      throw new AppError('Transaction Type is invalid.');
     }
 
     let findCategory = await categoriesRepository.findOne({
@@ -40,7 +40,7 @@ class CreateTransactionService {
     const { total } = await transactionsRepository.getBalance();
 
     if (type === 'outcome' && value > total) {
-      throw new AppError("You don't have enough balance", 400);
+      throw new AppError('You dont have enough balance.', 400);
     }
 
     const transaction = transactionsRepository.create({
