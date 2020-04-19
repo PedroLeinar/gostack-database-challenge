@@ -21,6 +21,10 @@ class CreateTransactionService {
     const transactionsRepository = getCustomRepository(TransactionsRepository);
     const categoriesRepository = getRepository(Category);
 
+    if (!['income', 'outcome'].includes(type)) {
+      throw new AppError('Transaction Type is invalid ');
+    }
+
     let findCategory = await categoriesRepository.findOne({
       where: {
         title: category,
