@@ -25,6 +25,12 @@ class CreateTransactionService {
       throw new AppError('transaction type is invalid.');
     }
 
+    const { total } = await transactionsRepository.getBalance();
+
+    if (type === 'outcome' && value > total) {
+      throw new AppError('insufficient funds.', 400);
+    }
+
     let findCategory = await categoriesRepository.findOne({
       where: {
         title: category,
@@ -32,22 +38,18 @@ class CreateTransactionService {
     });
 
     if (!findCategory) {
-      findCategory = await categoriesRepository.save({
+      findCategory = categoriesRepository.create({
         title: category,
       });
-    }
 
-    const { total } = await transactionsRepository.getBalance();
-
-    if (type === 'outcome' && value > total) {
-      throw new AppError('insufficient funds.', 400);
+      await categoriesRepository.save(findCategory);
     }
 
     const transaction = transactionsRepository.create({
       title,
       value,
       type,
-      category_id: findCategory.id,
+      category: findCategory,
     });
 
     await transactionsRepository.save(transaction);

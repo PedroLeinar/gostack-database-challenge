@@ -11,7 +11,7 @@ class DeleteTransactionService {
       throw new AppError('Transaction not found', 400);
     }
 
-    transactionsRepository.delete(transaction.id);
+    await transactionsRepository.remove(transaction);
   }
 }
 
